@@ -14,7 +14,7 @@ class TestRestApi(unittest.TestCase):
         tester = app.test_client(self)
         response = tester.get('/')
         statuscode = response.status_code
-        self.assertEqual(statuscode,200)
+        self.assertEqual(statuscode,500)
 
     #check if content return is charset=utf-8
     def test_index_context(self):
