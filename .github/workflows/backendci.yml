@@ -39,5 +39,4 @@ jobs:
         
     - name: Run Unit Tests 
       run: |
-        curl http://localhost/phpmyadmin/index.php?route=/sql&server=1&db=sdgp&table=panelgeneration&pos=0
         python Frontend/Project/src/app/tests.py
