@@ -8,7 +8,7 @@ app.secret_key = "caircocoders-ednalan"
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'biztech07'#----add the name of the data base here-----#
+app.config['MYSQL_DB'] = 'sdgp'#----add the name of the data base here-----#
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
  
@@ -31,7 +31,7 @@ def range():
         query = "SELECT * from panelgeneration WHERE date BETWEEN '{}' AND '{}'".format(From,to) #---------Change the sql query- add the correct table name----------#
         cur.execute(query)
         panelgenerationrange = cur.fetchall()#--------Check the range------------#
-    return jsonify({'htmlresponse': render_template('response.html', panelgenerationrange=panelgenerationrange)})#----------set the range---------------#
- 
+    # return jsonify({'htmlresponse': render_template('response.html', panelgenerationrange=panelgenerationrange)})#----------set the range---------------#
+    return render_template('index.html',panelgenerationrange=panelgenerationrange )
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=5000,debug=True)
