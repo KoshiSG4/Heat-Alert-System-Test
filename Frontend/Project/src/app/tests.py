@@ -36,7 +36,7 @@ class TestRestApi(unittest.TestCase):
 class TestBasic(unittest.TestCase):
     def setUp(self):
         # Load test data
-        self.app = app(database='data.json')
+        self.app = app(_Database='data.json')
 
     def test_customer_count(self):
         self.assertEqual(len(self.app.temp), 10)
@@ -50,7 +50,7 @@ class TestBasic(unittest.TestCase):
 class TestComplexData(unittest.TestCase):
     def setUp(self):
         # load test data
-        self.app = app(database='data.json')
+        self.app = app(_Database='data.json')
 
     def test_customer_count(self):
         self.assertEqual(len(self.app.customers), 20)
