@@ -7,7 +7,7 @@ THIS_DIR = Path(__file__).parent
 
 my_data_path = THIS_DIR.parent / 'Frontend/Project/src/app/app.py'
 
-import app
+from app import app
 
     
 class TestRestApi(unittest.TestCase):
