@@ -2,7 +2,7 @@ import unittest
 from flask import Flask
 from flask_mysqldb import MySQL,MySQLdb
 
-from app import app
+import app
 
     
 class TestRestApi(unittest.TestCase):
@@ -36,7 +36,7 @@ class TestRestApi(unittest.TestCase):
 class TestBasic(unittest.TestCase):
     def setUp(self):
         # Load test data
-        self.app = open('data.json').read()
+        self.app = open('Frontend/Project/src/app/data.json').read()
 
     def test_dataset_count(self):
         self.assertEqual(len(self.app.Time_Series), 10)
@@ -50,7 +50,7 @@ class TestBasic(unittest.TestCase):
 class TestComplexData(unittest.TestCase):
     def setUp(self):
         # load test data
-        self.app = open('data.json').read()
+        self.app = open('Frontend/Project/src/app/data.json').read()
 
     def test_customer_count(self):
         self.assertEqual(len(self.app.Time_Series), 20)
