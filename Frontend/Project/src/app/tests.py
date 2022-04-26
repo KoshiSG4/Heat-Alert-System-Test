@@ -1,6 +1,11 @@
 import unittest
 from flask import Flask
 from flask_mysqldb import MySQL,MySQLdb
+from pathlib import Path
+
+THIS_DIR = Path(__file__).parent
+
+my_data_path = THIS_DIR.parent / 'Frontend/Project/src/app/app.py'
 
 import app
 
@@ -38,13 +43,7 @@ class TestBasic(unittest.TestCase):
         # Load test data
         self.app = open('Frontend/Project/src/app/data.json').read()
 
-    def test_dataset_count(self):
-        self.assertEqual(len(self.app.Information), 10)
-
-    def test_existence_of_customer(self):
-        Time_Series = self.app.get_Information(id='2018-06-19')
-        self.assertEqual(Time_Series.open,"50")
-        self.assertEqual(Time_Series.volume, "13439267")
+    
 
 
 
