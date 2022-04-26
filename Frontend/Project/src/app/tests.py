@@ -1,11 +1,7 @@
 import unittest
 from flask import Flask
 from flask_mysqldb import MySQL,MySQLdb
-# Bring your packages onto the path
-# import sys, os
-# sys.path.append('..')
 
-# Now do your import
 from app import app
 
     
@@ -37,14 +33,32 @@ class TestRestApi(unittest.TestCase):
         self.assertTrue(b'module_temperature' in response.data)
         self.assertTrue(b'irrediance' in response.data)	
 
-    # def test_bar_with_client(self,client):
-    #     # Use the client here
-    #     # Example login request (on a hypothetical app)
-    #     rv = client.post('/login', {'username': 'koshi', 'password': 'secret_key'})
-    #     # Make sure rv is a redirect request to index page
-    #     self.assertLocationHeader('http://localhost/')
-    #     # Make sure session is set
-    #     self.assertIn('user_id', Flask.globals.session)				
+class TestBasic(unittest.TestCase):
+    def setUp(self):
+        # Load test data
+        self.app = app(database='data.json')
+
+    def test_customer_count(self):
+        self.assertEqual(len(self.app.temp), 10)
+
+    def test_existence_of_customer(self):
+        customer = self.app.get_customer(id='2018-06-19')
+        self.assertEqual(customer.open,"50")
+        self.assertEqual(customer.volume, "13439267")
+
+
+class TestComplexData(unittest.TestCase):
+    def setUp(self):
+        # load test data
+        self.app = app(database='data.json')
+
+    def test_customer_count(self):
+        self.assertEqual(len(self.app.customers), 20)
+
+    def test_existence_of_customer(self):
+        customer = self.app.get_customer(id='2018-05-25')
+        self.assertEqual(customer.open,"98.3000")
+        self.assertEqual(customer.volume, "18363918")	
 
 if __name__ == "__main__":
     unittest.main()
