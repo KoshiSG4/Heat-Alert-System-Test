@@ -39,26 +39,14 @@ class TestBasic(unittest.TestCase):
         self.app = open('Frontend/Project/src/app/data.json').read()
 
     def test_dataset_count(self):
-        self.assertEqual(len(self.app.Time_Series), 10)
+        self.assertEqual(len(self.app.Time_Series_(Daily)), 10)
 
     def test_existence_of_customer(self):
-        Time_Series = self.app.get_Time_Series(id='2018-06-19')
+        Time_Series = self.app.get_Time_Series_(Daily)(id='2018-06-19')
         self.assertEqual(Time_Series.open,"50")
         self.assertEqual(Time_Series.volume, "13439267")
 
 
-class TestComplexData(unittest.TestCase):
-    def setUp(self):
-        # load test data
-        self.app = open('Frontend/Project/src/app/data.json').read()
-
-    def test_customer_count(self):
-        self.assertEqual(len(self.app.Time_Series), 20)
-
-    def test_existence_of_customer(self):
-        customer = self.app.get_Time_Series(id='2018-05-25')
-        self.assertEqual(customer.open,"98.3000")
-        self.assertEqual(customer.volume, "18363918")	
 
 if __name__ == "__main__":
     unittest.main()
