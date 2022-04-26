@@ -46,7 +46,7 @@ class TestBasic(unittest.TestCase):
     def test_data(self):
         tester = app.test_client(self)
         response = tester.get('2018-06-19')
-        self.assertTrue(b'50' in response.data)
+        self.assertTrue(b'1. open' in response.data)
 
     
 
