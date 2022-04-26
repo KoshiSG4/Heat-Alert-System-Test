@@ -39,10 +39,10 @@ class TestBasic(unittest.TestCase):
         self.app = open('Frontend/Project/src/app/data.json').read()
 
     def test_dataset_count(self):
-        self.assertEqual(len(self.app.Time_Series_(Daily)), 10)
+        self.assertEqual(len(self.app.Information), 10)
 
     def test_existence_of_customer(self):
-        Time_Series = self.app.get_Time_Series_(Daily)(id='2018-06-19')
+        Time_Series = self.app.get_Information(id='2018-06-19')
         self.assertEqual(Time_Series.open,"50")
         self.assertEqual(Time_Series.volume, "13439267")
 
