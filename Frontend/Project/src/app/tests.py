@@ -36,27 +36,27 @@ class TestRestApi(unittest.TestCase):
 class TestBasic(unittest.TestCase):
     def setUp(self):
         # Load test data
-        self.app = open('Frontend/Project/src/app/data.json').read()
+        self.app = open('data.json').read()
 
-    def test_customer_count(self):
-        self.assertEqual(len(self.app.temp), 10)
+    def test_dataset_count(self):
+        self.assertEqual(len(self.app.Time_Series), 10)
 
     def test_existence_of_customer(self):
-        customer = self.app.get_customer(id='2018-06-19')
-        self.assertEqual(customer.open,"50")
-        self.assertEqual(customer.volume, "13439267")
+        Time_Series = self.app.get_Time_Series(id='2018-06-19')
+        self.assertEqual(Time_Series.open,"50")
+        self.assertEqual(Time_Series.volume, "13439267")
 
 
 class TestComplexData(unittest.TestCase):
     def setUp(self):
         # load test data
-        self.app = open('Frontend/Project/src/app/data.json').read()
+        self.app = open('data.json').read()
 
     def test_customer_count(self):
-        self.assertEqual(len(self.app.customers), 20)
+        self.assertEqual(len(self.app.Time_Series), 20)
 
     def test_existence_of_customer(self):
-        customer = self.app.get_customer(id='2018-05-25')
+        customer = self.app.get_Time_Series(id='2018-05-25')
         self.assertEqual(customer.open,"98.3000")
         self.assertEqual(customer.volume, "18363918")	
 
