@@ -38,19 +38,5 @@ class TestRestApi(unittest.TestCase):
         self.assertTrue(b'module_temperature' in response.data)
         self.assertTrue(b'irrediance' in response.data)	
 
-class TestBasic(unittest.TestCase):
-    def setUp(self):
-        # Load test data
-        self.app = open('Frontend/Project/src/app/data.json').read()
-        
-    def test_data(self):
-        tester = app.test_client(self)
-        response = tester.get('2018-06-19')
-        self.assertTrue(b'1. open' in response.data)
-
-    
-
-
-
 if __name__ == "__main__":
     unittest.main()
