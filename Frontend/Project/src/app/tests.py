@@ -7,7 +7,7 @@ from mockdb import mockDB
 from mock import patch
 
     
-class TestRestApi(unittest.TestCase):
+class TestRestApi(mockDB):
     #check if response is 200
     def test_index(self):
         with self.mock_db_config: 
