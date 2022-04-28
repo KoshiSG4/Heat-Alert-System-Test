@@ -5,7 +5,7 @@ from mock import patch
 from app import app
 
 MYSQL_USER = "root"
-MYSQL_PASSWORD = "DB_PASSWORD"
+MYSQL_PASSWORD = ${{secrets.DB_PASSWORD}}
 MYSQL_DB = "testdb"
 MYSQL_HOST = "localhost"
 MYSQL_PORT = "3306"
