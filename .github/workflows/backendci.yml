@@ -48,21 +48,12 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Verify MySQL connection from host
-        
         run: |
           sudo apt-get install -y mysql-server mysql-client
           mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES" 
           
       - name: Run Unit Tests 
-        env:
-          DB_CONNECTION: mysql
-          DB_DATABASE: db_test
-          DB_PORT: 3306
-          DB_USER: root
-          DB_HOST: 127.0.0.1
-          DB_PASSWORD: password
         run: |
-          sudo apt-get install -y mysql-server mysql-client
           python Frontend/Project/src/app/tests.py
           
   test-container:
