@@ -1,12 +1,21 @@
 
+from cgi import test
 import unittest
+import mysql
 from flask import Flask
 from flask_mysqldb import MySQL,MySQLdb
-import mysql.connector
-from mysql.connector import errorcode
-from mock import patch
 from app import app
+from mock import patch
 
+test = Flask(__name__)
+
+test.config['MYSQL_HOST'] = 'localhost'
+test.config['MYSQL_USER'] = 'root'
+test.config['MYSQL_PASSWORD'] = ''
+test.config['MYSQL_DB'] = 'testdb'#----add the name of the data base here-----#
+test.config['MYSQL_PORT'] = '3306'
+test.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+mysql = MySQL(test)
     
 class TestRestApi(unittest.TestCase):
     #check if response is 200
@@ -22,41 +31,18 @@ class TestRestApi(unittest.TestCase):
         response = tester.get('/')
         self.assertEqual(response.content_type,"text/html; charset=utf-8")
 
-    #creating database
-    @classmethod
-    def setUpClass(cls):
-        MYSQL_USER = "root"
-        MYSQL_PASSWORD = ""
-        MYSQL_DB = "testdb"
-        MYSQL_HOST = "localhost"
-        MYSQL_PORT = "3306"
-
+    #setup database
+    def setUpDb():
         cnx = mysql.connector.connect(
-            host=MYSQL_HOST,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            port=MYSQL_PORT
+            host='localhost',
+            user='root',
+            password='',
+            port='3306'
         )
         cursor = cnx.cursor(dictionary=True)
-
-        #drop database if it already exists
-        try:
-            cursor.execute("DROP DATABASE {}".format(MYSQL_DB))
-            cursor.close()
-            print("DB Dropped")
-        except mysql.connector.Error as err:
-            print("{}{}".format(MYSQL_DB,err))
-
-        cursor = cnx.cursor(dictionary=True)
-        try:
-            cursor.execute(
-                "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(MYSQL_DB)
-            )
-        except mysql.connector.Error as err:
-            print("Failed creating database: {}".format(err))
-            exit(1)
-        cnx.database = MYSQL_DB
-
+        cursor = mysql.connection.cursor()
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute("CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'")
         query = """CREATE TABLE `panelgeneration` (
                     `date` DATE NOT NULL,
                     `panel_id` INT(7),
@@ -68,17 +54,7 @@ class TestRestApi(unittest.TestCase):
                     `module_temperature` DOUBLE (11,9) NOT NULL,
                     `irrediance` DOUBLE (9,8) NOT NULL
                 )"""
-        try:
-            cursor.execute(query)
-            cnx.commit()
-        except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("test_table already exists.")
-            else:
-                print(err.msg)
-        else:
-            print("OK")
-
+        cursor.execute(query)
         insert_data_query = """INSERT INTO `panelgeneration` (`date`,`panel_id`, `DC_Power`, `AC_Power`, `daily_yeild`,`total_yeild`, `ambient_temperature`,`module_temperature`,`irrediance`) VALUES
                                 ('2020-05-17', 4136001,224.42,220.04,9351.866667,2516176.867,35.50715917,38.92884879, 0.093825594),
                                 ('2020-05-18', 4136001,340.3133333,334.5333333,9266.8,2525592.8,32.15728253,35.15568323, 0.16798548),
@@ -112,45 +88,8 @@ class TestRestApi(unittest.TestCase):
                                 ('2020-06-15', 4136001,254.6133333,249.8066667,2133.8,2643669.8,28.1521964,73.68684883,0.163826239),
                                 ('2020-06-16', 4136001,22.04666667,21.29333333,1963.533333,2454835.533,28.91297538,71.26802545,0.085298812),
                                 ('2020-06-17', 4136001,282.7714286,277.6928571,1650.285714,2641102.286,26.498535,71.3130768,0.031953231)"""
-        try: 
-            cursor.execute(insert_data_query)
-            cnx.commit()
-        except mysql.connector.Error as err:
-            print("Data insertion to test_table failed\n" +err)
-        cursor.close()
-        cnx.close()
+        cursor.execute(insert_data_query)
 
-        testconfig={
-            'host': MYSQL_HOST,
-            'user':MYSQL_USER,
-            'password':MYSQL_PASSWORD,
-            'database':MYSQL_DB
-        }
-        cls.mock_db_config = patch.dict(app.config, testconfig)
-
-    #teardown database
-    @classmethod
-    def tearDownClass(cls):
-        MYSQL_USER = "root"
-        MYSQL_PASSWORD = ""
-        MYSQL_DB = "testdb"
-        MYSQL_HOST = "localhost"
-
-        cnx = mysql.connector.connect(
-            host=MYSQL_HOST,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD
-        )
-        cursor = cnx.cursor(dictionary=True)
-
-        #drop test database
-        try:
-            cursor.execute("DROP DATABASE{}".format(MYSQL_DB))
-            cnx.commit()
-            cursor.close()
-        except mysql.connector.Error as err:
-            print("Database{} does not exists. Dropping db failed.".format(MYSQL_DB) )
-        cnx.close()
 
     # check for data returned 
     def test_index_data(self):
@@ -165,6 +104,25 @@ class TestRestApi(unittest.TestCase):
             self.assertTrue(b'ambient_temperature' in response.data)
             self.assertTrue(b'module_temperature' in response.data)
             self.assertTrue(b'irrediance' in response.data)					
+
+
+    def tearDownClass():
+        cnx = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password=''
+        )
+        cursor = cnx.cursor(dictionary=True)
+
+        #drop test database
+        try:
+            cursor.execute("DROP DATABASE{}".format('testdb'))
+            cnx.commit()
+            cursor.close()
+        except mysql.connector.Error as err:
+            print("Database{} does not exists. Dropping db failed.".format('testdb') )
+        cnx.close()
+
 
 if __name__ == "__main__":
     unittest.main()
