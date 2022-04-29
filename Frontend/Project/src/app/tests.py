@@ -1,10 +1,7 @@
 
 import unittest
-from flask import Flask
-from flask_mysqldb import MySQL,MySQLdb
-from app import app
 from mockdb import mockDB
-from mock import patch
+from app import app
 
     
 class TestRestApi(mockDB):
