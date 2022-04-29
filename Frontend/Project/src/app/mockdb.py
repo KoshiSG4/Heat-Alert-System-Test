@@ -7,7 +7,7 @@ from app import app
 MYSQL_USER = "root"
 MYSQL_PASSWORD = "Koshila@4"
 MYSQL_DB = "testdb"
-MYSQL_HOST = "127.0.0.1"
+MYSQL_HOST = "localhost"
 MYSQL_PORT = "3306"
 
 class mockDB(TestCase):
