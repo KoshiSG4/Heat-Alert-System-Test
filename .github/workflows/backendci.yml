@@ -15,13 +15,15 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-  
-      
-    env:
-        DB_DATABASE: testdb
-        DB_USER: root
-        DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v3
@@ -48,10 +50,25 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get install -y mysql-server mysql-client
-          mysql --host 127.0.0.1 --port 3306 -uroot -ppassword -p testdb
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES"
           
       - name: Run Unit Tests 
         run: |
           python Frontend/Project/src/app/tests.py
+          
+  test-container:
+      runs-on: ubuntu-latest
+      container: ubuntu
+      services:
+        mysql:
+          image: mysql:5.7
+          env:
+            MYSQL_ROOT_PASSWORD: password
+          options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+      steps:
+        - name: Verify MySQL connection from container
+          run: |
+            apt-get update && apt-get install -y mysql-client
+            mysql --host mysql -uroot -ppassword -e "SHOW DATABASES"
       
   
