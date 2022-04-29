@@ -2,7 +2,6 @@
 import unittest
 from flask import Flask
 from flask_mysqldb import MySQL,MySQLdb
-from Frontend.Project.src.app.mockdb import mockDB
 import mysql.connector
 from mysql.connector import errorcode
 from mock import patch
