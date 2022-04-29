@@ -23,6 +23,7 @@ class TestRestApi(unittest.TestCase):
         self.assertEqual(response.content_type,"text/html; charset=utf-8")
 
     #creating database
+    @classmethod
     def setUpClass(cls):
         MYSQL_USER = "root"
         MYSQL_PASSWORD = ""
@@ -128,6 +129,7 @@ class TestRestApi(unittest.TestCase):
         cls.mock_db_config = patch.dict(app.config, testconfig)
 
     #teardown database
+    @classmethod
     def tearDownClass(cls):
         MYSQL_USER = "root"
         MYSQL_PASSWORD = ""
