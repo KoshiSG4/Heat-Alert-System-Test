@@ -4,7 +4,7 @@ from mysql.connector import errorcode
 from app import app
 
 MYSQL_USER = "root"
-MYSQL_PASSWORD = ""
+MYSQL_PASSWORD = "testpassword"
 MYSQL_DB = "testdb"
 MYSQL_HOST = "127.0.0.1"
 MYSQL_PORT = "3306"
