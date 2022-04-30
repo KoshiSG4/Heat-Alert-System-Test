@@ -40,7 +40,6 @@ jobs:
           pip install flake8 pytest
           pip install mysql-connector-python
           pip install mock
-          docker exec
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Lint with flake8
         run: |
@@ -51,12 +50,12 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get install -y mysql-server mysql-client
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES" 
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES" -proot  db_test< ./testdb.sql
       - name: load database
-        run: docker exec -i mysql_1  mysql -uroot  -proot  db_test< ./testdb.sql
+        run: mysql_1  mysql -uroot  -proot  db_test< ./testdb.sql
       - name: Run Unit Tests 
         run: |
-          docker exec  python Backend/tests.py
+          python Backend/tests.py
           
   test-container:
       runs-on: ubuntu-latest
