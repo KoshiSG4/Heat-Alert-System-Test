@@ -4,13 +4,14 @@ from mysql.connector import errorcode
 from app import app
 
 MYSQL_USER = "root"
-MYSQL_PASSWORD = "testpassword"
-MYSQL_DB = "testdb"
+MYSQL_PASSWORD = "biztech07@4"
+MYSQL_DB = "biztech07"
 MYSQL_HOST = "127.0.0.1"
 MYSQL_PORT = "3306"
 
-class TestBase(unittest.TestCase):
+class TestRestApi(unittest.TestCase):
     def setUp(self):
+        print("setup....................................")
         cnx = mysql.connector.connect(
             host=MYSQL_HOST,
             user=MYSQL_USER,
@@ -101,6 +102,7 @@ class TestBase(unittest.TestCase):
         cnx.close()
 
     def tearDown(self):
+        print("teardown....................................")
         cnx = mysql.connector.connect(
             host=MYSQL_HOST,
             user=MYSQL_USER,
@@ -119,13 +121,14 @@ class TestBase(unittest.TestCase):
 
 
     
-class TestRestApi(unittest.TestCase):
+
     #check if response is 200
     def test_index(self):
+        print("test....................................")
         tester = app.test_client(self)
         response = tester.get('/')
         statuscode = response.status_code
-        self.assertEqual(statuscode,500)
+        self.assertEqual(statuscode,200)
 
     #check if content return is charset=utf-8
     def test_index_context(self):
