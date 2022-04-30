@@ -50,7 +50,7 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get install -y mysql-server mysql-client
-          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES" -proot  db_test< ./testdb.sql
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES" -proot  db_test< Backend/testdb.sql
       - name: load database
         run: mysql_1  mysql -uroot  -proot  db_test< ./testdb.sql
       - name: Run Unit Tests 
