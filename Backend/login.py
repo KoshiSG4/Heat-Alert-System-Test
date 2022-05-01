@@ -1,3 +1,4 @@
+from sys import api_version
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -6,13 +7,12 @@ import re
   
 app = Flask(__name__)
   
-  
 app.secret_key = 'your secret key'
   
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'login_test'
+app.config['MYSQL_DB'] = 'login_db'
   
 mysql = MySQL(app)
 
@@ -24,7 +24,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s AND password = % s', (username, password, ))
+        cursor.execute('SELECT * FROM login WHERE username = % s AND password = % s', (username, password, ))
         account = cursor.fetchone()
         if account:
             session['loggedin'] = True
@@ -35,6 +35,7 @@ def login():
         else:
             msg = 'Incorrect username / password !'
     return render_template('login.component.html', msg = msg)
+
 
 @app.route('/logout')
 def logout():
@@ -51,7 +52,7 @@ def register():
         password = request.form['password']
         email = request.form['email']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s', (username, ))
+        cursor.execute('SELECT * FROM login WHERE username = % s', (username, ))
         account = cursor.fetchone()
         if account:
             msg = 'Account already exists !'
@@ -62,12 +63,14 @@ def register():
         elif not username or not password or not email:
             msg = 'Please fill out the form !'
         else:
-            cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, password, email, ))
+            cursor.execute('INSERT INTO login VALUES (NULL, % s, % s, % s)', (username, password, email, ))
             mysql.connection.commit()
             msg = 'You have successfully registered !'
+            return render_template('index.html', msg = msg)
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template('signup.component.html', msg = msg)
 
+app.add_template_test(login,'/fo')
 if __name__ == '__main__':
     app.run(port=5000,debug=True)
